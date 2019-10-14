@@ -663,19 +663,33 @@ require get_parent_theme_file_path( '/inc/customizer.php' );
  */
 require get_parent_theme_file_path( '/inc/icon-functions.php' );
 
+
+/**
+* Вывод наличия(общий)
+*/
 function twentyseventeen_db(){
 	echo '<table>
 		<tr>
-		<th>1</th>
-		<th>2</th>
-		</tr>
-		<tr>';
+		<th>Размер</th>
+		<th>ГОСТ</th>
+		<th>Сталь</th>
+		<th>Длина(Метр)</th>
+		<th>Остаток(Тн)</th>
+		<th>Цена(Руб/тн)</th>
+		</tr>';
 		
 				global $wpdb;
-	$result=$wpdb->get_results("SELECT * FROM wp_users");
+	$result=$wpdb->get_results("SELECT price.name, price.steel, price.gost, price.length, price.ed_izm, price.ostatok, price.price FROM price, wp_prod WHERE price.name=wp_prod.name and price.gost=wp_prod.gost and price.steel=wp_prod.steel ORDER BY wp_prod.id");
 	foreach ( $result as $res ) {
-	echo '<td>'.$res->user_login.'</td>';
-		echo '<td>'.$res->ID.'</td>';
+		if($res->ostatok==null) continue;
+		echo '<tr>';
+	echo '<td>'.$res->name.'</td>';
+		echo '<td>'.$res->gost.'</td>';
+		echo '<td>'.$res->steel.'</td>';
+		echo '<td>'.$res->length.'</td>';
+		echo '<td>'.$res->ostatok.'</td>';
+		echo '<td>'.$res->price.'</td>';
+		echo '</tr>';
     }
-	echo '</tr></table>';
+	echo '</table>';
 }
