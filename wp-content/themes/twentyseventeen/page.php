@@ -17,12 +17,16 @@
 
 get_header(); ?>
 
+<div class="site-header-form">
+    <?php dynamic_sidebar( 'top-area' ); ?>
+</div>
+
 <div class="wrap">
 	<div id="primary" class="content-area">
 		<main id="main" class="site-main" role="main">
 
 			<?php
-			get_sidebar();
+			
 			while ( have_posts() ) :
 			
 				the_post();
@@ -35,9 +39,6 @@ get_header(); ?>
 				endif;
             
 			endwhile; // End of the loop.
-			
-			twentyseventeen_db();
-			
 			
 			?>
 

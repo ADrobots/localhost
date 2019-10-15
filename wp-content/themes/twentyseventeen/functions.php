@@ -366,6 +366,7 @@ function twentyseventeen_widgets_init() {
 			'after_title'   => '</h2>',
 		)
 	);
+
 }
 add_action( 'widgets_init', 'twentyseventeen_widgets_init' );
 
@@ -662,6 +663,18 @@ require get_parent_theme_file_path( '/inc/customizer.php' );
  * SVG icons functions and filters.
  */
 require get_parent_theme_file_path( '/inc/icon-functions.php' );
+
+
+function exec_php($matches){
+    eval('ob_start();'.$matches[1].'$inline_execute_output = ob_get_contents();ob_end_clean();');
+    return $inline_execute_output;
+}
+function inline_php($content){
+    $content = preg_replace_callback('/\[exec\]((.|\n)*?)\[\/exec\]/', 'exec_php', $content);
+    $content = preg_replace('/\[exec off\]((.|\n)*?)\[\/exec\]/', '$1', $content);
+    return $content;
+}
+add_filter('the_content', 'inline_php', 0);
 
 
 /**
