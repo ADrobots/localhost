@@ -681,6 +681,10 @@ add_filter('the_content', 'inline_php', 0);
 * Вывод наличия(общий)
 */
 function twentyseventeen_db(){
+
+	if(get_the_title()=="Трубы водогазопроводные" || get_the_title()=="Трубы электросварные" || get_the_title()=="Трубы профильные" || get_the_title()=="Трубы бесшовные х/к" || get_the_title()=="Трубы бесшовные г/к" || get_the_title()=="Трубы оцинкованные"){
+
+
 	echo '<table>
 		<tr>
 		<th>Размер</th>
@@ -692,17 +696,93 @@ function twentyseventeen_db(){
 		</tr>';
 		
 				global $wpdb;
-	$result=$wpdb->get_results("SELECT price.name, price.steel, price.gost, price.length, price.ed_izm, price.ostatok, price.price FROM price, wp_prod WHERE price.name=wp_prod.name and price.gost=wp_prod.gost and price.steel=wp_prod.steel ORDER BY wp_prod.id");
+	$result=$wpdb->get_results("SELECT price.name, price.steel, price.gost, price.length, price.ed_izm, price.ostatok, price.price FROM price, wp_prod WHERE price.name=wp_prod.name and price.gost=wp_prod.gost and price.steel=wp_prod.steel and price.ostatok<>0 ORDER BY wp_prod.id");
+
+
 	foreach ( $result as $res ) {
-		if($res->ostatok==null) continue;
-		echo '<tr>';
-	echo '<td>'.$res->name.'</td>';
-		echo '<td>'.$res->gost.'</td>';
-		echo '<td>'.$res->steel.'</td>';
-		echo '<td>'.$res->length.'</td>';
-		echo '<td>'.$res->ostatok.'</td>';
-		echo '<td>'.$res->price.'</td>';
-		echo '</tr>';
-    }
+
+		if($res->ostatok==null) continue;	
+		switch (get_the_title()) {
+			case 'Трубы водогазопроводные':
+			if($res->gost!="3262-75") continue;
+				echo '<tr>';
+				echo '<td>'.$res->name.'</td>';
+				echo '<td>'.$res->gost.'</td>';
+				echo '<td>'.$res->steel.'</td>';
+				echo '<td>'.$res->length.'</td>';
+				echo '<td>'.$res->ostatok.'</td>';
+				echo '<td>'.$res->price.'</td>';
+				echo '</tr>';
+				break;
+
+			case 'Трубы электросварные':
+			if($res->gost!="10705-80") continue;
+				echo '<tr>';
+				echo '<td>'.$res->name.'</td>';
+				echo '<td>'.$res->gost.'</td>';
+				echo '<td>'.$res->steel.'</td>';
+				echo '<td>'.$res->length.'</td>';
+				echo '<td>'.$res->ostatok.'</td>';
+				echo '<td>'.$res->price.'</td>';
+				echo '</tr>';
+				break;	
+
+			case 'Трубы оцинкованные':
+			if($res->steel=="2пс" && $res->length=="7,8"){
+				echo '<tr>';
+				echo '<td>'.$res->name.'</td>';
+				echo '<td>'.$res->gost.'</td>';
+				echo '<td>'.$res->steel.'</td>';
+				echo '<td>'.$res->length.'</td>';
+				echo '<td>'.$res->ostatok.'</td>';
+				echo '<td>'.$res->price.'</td>';
+				echo '</tr>';
+			}
+				break;	
+
+			case 'Трубы профильные':
+			if($res->gost=="13663-86" || $res->gost=="8639-82" || $res->gost=="30245-03"){
+				echo '<tr>';
+				echo '<td>'.$res->name.'</td>';
+				echo '<td>'.$res->gost.'</td>';
+				echo '<td>'.$res->steel.'</td>';
+				echo '<td>'.$res->length.'</td>';
+				echo '<td>'.$res->ostatok.'</td>';
+				echo '<td>'.$res->price.'</td>';
+				echo '</tr>';
+			}
+				break;	
+
+			case 'Трубы бесшовные г/к':
+			if($res->gost!="8732-78") continue;
+				echo '<tr>';
+				echo '<td>'.$res->name.'</td>';
+				echo '<td>'.$res->gost.'</td>';
+				echo '<td>'.$res->steel.'</td>';
+				echo '<td>'.$res->length.'</td>';
+				echo '<td>'.$res->ostatok.'</td>';
+				echo '<td>'.$res->price.'</td>';
+				echo '</tr>';
+				break;	
+
+			case 'Трубы бесшовные х/к':
+			if($res->gost!="8734-75") continue;
+				echo '<tr>';
+				echo '<td>'.$res->name.'</td>';
+				echo '<td>'.$res->gost.'</td>';
+				echo '<td>'.$res->steel.'</td>';
+				echo '<td>'.$res->length.'</td>';
+				echo '<td>'.$res->ostatok.'</td>';
+				echo '<td>'.$res->price.'</td>';
+				echo '</tr>';
+				break;		
+			
+			default:
+				# code...
+				break;
+		}
+	}
 	echo '</table>';
+
+}
 }
