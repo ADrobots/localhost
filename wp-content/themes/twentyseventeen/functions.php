@@ -682,6 +682,13 @@ add_filter('the_content', 'inline_php', 0);
 */
 function twentyseventeen_db(){
 
+/*echo urldecode($_SERVER['REQUEST_URI']);*/
+/*$var=urldecode($_SERVER['REQUEST_URI']);
+$var1=explode('/', $var);
+echo $var1[3];*/
+
+
+
 	if(get_the_title()=="Трубы водогазопроводные" || get_the_title()=="Трубы электросварные" || get_the_title()=="Трубы профильные" || get_the_title()=="Трубы бесшовные х/к" || get_the_title()=="Трубы бесшовные г/к" || get_the_title()=="Трубы оцинкованные"){
 
 
@@ -786,3 +793,52 @@ function twentyseventeen_db(){
 
 }
 }
+
+/**
+Вывод карточки товара с ценой из прайса
+*/
+function twentyseventeen_db_getPrice(){
+	$var=urldecode($_SERVER['REQUEST_URI']);
+    $var1=explode('/', $var);
+/*echo $var1[3];*/
+
+	global $wpdb;
+
+	$result1=$wpdb->get_results("SELECT wp_prod.name, wp_prod.gost, wp_prod.inf, wp_prod.steel, wp_prod.pricem, wp_prod.massam, price.price, price.ostatok, price.length FROM wp_prod, price WHERE wp_prod.url='$var1[3]' and wp_prod.name=price.name and wp_prod.gost=price.gost and wp_prod.steel=price.steel and price.ostatok<>0.001 and price.ostatok<>'' and price.price<>''");
+
+	foreach ( $result1 as $res1 ) {	
+		if ($res1->length=="8") {
+
+			echo "Цена за метр: ".round($res1->massam*$res1->price, 0, PHP_ROUND_HALF_EVEN)."руб/м\n\n"."Цена за тонну: ".$res1->price."руб/тн";
+
+			break;
+		}
+
+	}		
+
+}
+
+
+function twentyseventeen_db_truncateTable(){
+
+	$xmlProd=simplexml_load_file('./wp-content/themes/twentyseventeen/wp_prod.xml');
+	$connect=mysqli_connect('localhost', 'root', '', "baza")or die("Невозможно установить соединение c базой данных".mysql_error());
+    mysqli_query($connect, 'TRUNCATE TABLE wp_prod');
+    foreach($xmlProd->product as $row){
+    $id=$row->id;
+    $name=$row->name;
+    $gost=$row->gost;
+    $steel=$row->steel;
+    $inf=$row->inf;
+    $url=$row->url;
+    $pricem=$row->pricem;
+    $massam=$row->massam;
+
+    $sqlProd = "INSERT INTO wp_prod (id, name, gost, steel, inf, url, pricem, massam) VALUES ('$id', '$name', '$gost', '$steel', '$inf', '$url', '$pricem', '$massam')";
+        mysqli_query($connect, $sqlProd);
+
+    }
+
+}
+
+

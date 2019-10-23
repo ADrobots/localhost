@@ -24,7 +24,7 @@ get_header(); ?>
 <div class="wrap">
 	<div id="primary" class="content-area">
 		<main id="main" class="site-main" role="main">
-
+			<?php echo $_GET['url']; ?>
 			<?php
 			
 			while ( have_posts() ) :
@@ -41,7 +41,7 @@ get_header(); ?>
 			endwhile; // End of the loop.
 			
 			?>
-
+	
 		</main><!-- #main -->
 	</div><!-- #primary -->
 </div><!-- .wrap -->

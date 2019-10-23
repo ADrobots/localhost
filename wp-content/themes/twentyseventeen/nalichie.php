@@ -21,7 +21,8 @@ get_header(); ?>
 
 
 				<div style="float:right">
-				<?php twentyseventeen_db(); ?>
+				<?php twentyseventeen_db();?>
+				<?php twentyseventeen_db_getPrice(); ?>
 				</div>
 
 			</div>
