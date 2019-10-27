@@ -60,6 +60,7 @@ html {
 
 body {
 	margin: 0;
+	
 }
 
 article,
@@ -1532,6 +1533,7 @@ body {
 #page {
 	position: relative;
 	word-wrap: break-word;
+	opacity:0.9;
 }
 
 .wrap {
@@ -1557,8 +1559,9 @@ body {
 }
 
 .site-header {
-	background-color: #fafafa;
+	background-color: #fafafa05;
 	position: relative;
+	opacity: 0.6;
 }
 
 /* Site branding */

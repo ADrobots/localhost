@@ -703,7 +703,7 @@ echo $var1[3];*/
 		</tr>';
 		
 				global $wpdb;
-	$result=$wpdb->get_results("SELECT price.name, price.steel, price.gost, price.length, price.ed_izm, price.ostatok, price.price FROM price, wp_prod WHERE price.name=wp_prod.name and price.gost=wp_prod.gost and price.steel=wp_prod.steel and price.ostatok<>0 ORDER BY wp_prod.id");
+	$result=$wpdb->get_results("SELECT price.name, price.steel, price.gost, price.length, price.ed_izm, price.ostatok, price.price, wp_prod.url FROM price, wp_prod WHERE price.name=wp_prod.name and price.gost=wp_prod.gost and price.steel=wp_prod.steel and price.ostatok<>0 ORDER BY wp_prod.id");
 
 
 	foreach ( $result as $res ) {
@@ -712,7 +712,7 @@ echo $var1[3];*/
 		switch (get_the_title()) {
 			case 'Трубы водогазопроводные':
 			if($res->gost!="3262-75") continue;
-				echo '<tr>';
+				echo '<tr class="cour" onclick="location.href=\'/гост-3262/' . $res->url . '\';">';
 				echo '<td>'.$res->name.'</td>';
 				echo '<td>'.$res->gost.'</td>';
 				echo '<td>'.$res->steel.'</td>';
@@ -793,7 +793,7 @@ echo $var1[3];*/
 
 }
 }
-
+add_shortcode('price', 'twentyseventeen_db');
 /**
 Вывод карточки товара с ценой из прайса
 */
@@ -840,5 +840,7 @@ function twentyseventeen_db_truncateTable(){
     }
 
 }
+
+add_theme_support( 'custom-background' );
 
 
