@@ -724,7 +724,7 @@ echo $var1[3];*/
 
 			case 'Трубы электросварные':
 			if($res->gost!="10705-80") continue;
-				echo '<tr>';
+				echo '<tr class="cour" onclick="location.href=\'/гост-10705/' . $res->url . '\';">';
 				echo '<td>'.$res->name.'</td>';
 				echo '<td>'.$res->gost.'</td>';
 				echo '<td>'.$res->steel.'</td>';
@@ -736,7 +736,7 @@ echo $var1[3];*/
 
 			case 'Трубы оцинкованные':
 			if($res->steel=="2пс" && $res->length=="7,8"){
-				echo '<tr>';
+				echo '<tr class="cour" onclick="location.href=\'/трубы-оцинкованные/' . $res->url . '\';">';
 				echo '<td>'.$res->name.'</td>';
 				echo '<td>'.$res->gost.'</td>';
 				echo '<td>'.$res->steel.'</td>';
@@ -749,7 +749,7 @@ echo $var1[3];*/
 
 			case 'Трубы профильные':
 			if($res->gost=="13663-86" || $res->gost=="8639-82" || $res->gost=="30245-03"){
-				echo '<tr>';
+				echo '<tr class="cour" onclick="location.href=\'/гост-8639-13663-30245/' . $res->url . '\';">';
 				echo '<td>'.$res->name.'</td>';
 				echo '<td>'.$res->gost.'</td>';
 				echo '<td>'.$res->steel.'</td>';
@@ -762,7 +762,7 @@ echo $var1[3];*/
 
 			case 'Трубы бесшовные г/к':
 			if($res->gost!="8732-78") continue;
-				echo '<tr>';
+				echo '<tr class="cour" onclick="location.href=\'/гост-8732/' . $res->url . '\';">';
 				echo '<td>'.$res->name.'</td>';
 				echo '<td>'.$res->gost.'</td>';
 				echo '<td>'.$res->steel.'</td>';
@@ -774,7 +774,7 @@ echo $var1[3];*/
 
 			case 'Трубы бесшовные х/к':
 			if($res->gost!="8734-75") continue;
-				echo '<tr>';
+				echo '<tr class="cour" onclick="location.href=\'/гост-8734/' . $res->url . '\';">';
 				echo '<td>'.$res->name.'</td>';
 				echo '<td>'.$res->gost.'</td>';
 				echo '<td>'.$res->steel.'</td>';
@@ -809,7 +809,7 @@ function twentyseventeen_db_getPrice(){
 	foreach ( $result1 as $res1 ) {	
 		if ($res1->length=="8") {
 
-			echo "Цена за метр: ".round($res1->massam*$res1->price, 0, PHP_ROUND_HALF_EVEN)."руб/м\n\n"."Цена за тонну: ".$res1->price."руб/тн";
+			echo "Цена за метр: ".round($res1->massam*$res1->price, 0, PHP_ROUND_HALF_EVEN)."руб/м\n\n"."<hr>Цена за тонну: ".$res1->price."руб/тн";
 
 			break;
 		}
@@ -826,6 +826,7 @@ function twentyseventeen_db_truncateTable(){
     mysqli_query($connect, 'TRUNCATE TABLE wp_prod');
     foreach($xmlProd->product as $row){
     $id=$row->id;
+    $category=$row->category;
     $name=$row->name;
     $gost=$row->gost;
     $steel=$row->steel;
@@ -833,14 +834,60 @@ function twentyseventeen_db_truncateTable(){
     $url=$row->url;
     $pricem=$row->pricem;
     $massam=$row->massam;
+    $title=$row->title;
+    $metatitle=$row->metatitle;
+    $keywords=$row->keywords;
+    $img=$row->img;
 
-    $sqlProd = "INSERT INTO wp_prod (id, name, gost, steel, inf, url, pricem, massam) VALUES ('$id', '$name', '$gost', '$steel', '$inf', '$url', '$pricem', '$massam')";
+    $sqlProd = "INSERT INTO wp_prod (id, category, name, gost, steel, inf, url, pricem, massam, title, metatitle, keywords, img) VALUES ('$id', '$category', '$name', '$gost', '$steel', '$inf', '$url', '$pricem', '$massam', '$title', '$metatitle', '$keywords', '$img')";
         mysqli_query($connect, $sqlProd);
 
     }
 
 }
-
+/**
+Добавить "Фон" в рабочую панель
+*/
 add_theme_support( 'custom-background' );
+
+/**Вывести перечень продукции
+*/
+function twentyseventeen_prod_db(){
+
+	echo '<table>
+		<tr>
+		<th>Размер</th>
+		<th>ГОСТ</th>
+		<th>Сталь</th>
+		</tr>';
+
+		
+				global $wpdb;
+	$result=$wpdb->get_results("SELECT wp_prod.id, wp_prod.name, wp_prod.gost, wp_prod.steel, wp_prod.url FROM wp_prod ORDER BY wp_prod.id ASC");
+
+
+	foreach ( $result as $res ) {
+		switch (get_the_title()) {
+			case 'гост 3262':
+			if($res->gost!="3262") continue;
+				echo '<tr class="cour" onclick="location.href=\'/гост-3262/' . $res->url . '\';">';
+				echo '<td>'.$res->name.'</td>';
+				echo '<td>'.$res->gost.'</td>';
+				echo '<td>'.$res->steel.'</td>';
+				echo '</tr>';
+				break;
+		
+			
+			default:
+				echo "no";
+				break;
+		}
+	}
+	echo '</table>';
+
+}
+
+add_shortcode('prod', 'twentyseventeen_prod_db');
+
 
 
